@@ -249,7 +249,7 @@ const LandingPage = ({ onLaunch }) => {
                 )}
               </button>
             ))}
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="nav-item-link">GitHub</a>
+            <a href="https://github.com/harshlagwal/PyViz-Sandbox" target="_blank" rel="noopener noreferrer" className="nav-item-link">GitHub</a>
           </div>
 
           <div className="nav-actions">
