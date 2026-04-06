@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim"; // Using slim for performance
 import { 
@@ -82,27 +82,34 @@ const LoopingTypewriter = () => {
 
         return (
           <div key={line.id} className="flex items-center" style={{ minHeight: '1.6em' }}>
-            <motion.div 
-               initial={{ width: 0 }}
-               animate={{ width: isTyped || isCurrent ? "100%" : "0%" }}
-               transition={{ 
-                 duration: isCurrent ? 1.2 : 0, 
-                 ease: "linear" 
-               }}
-               style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}
-            >
-              {line.content}
-            </motion.div>
-            
-            {(isCurrent || (phase === 'hold' && isLastLine)) && (
-              <motion.span 
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "steps(2)" }}
-                className="ml-1 font-bold text-[#00ffa3]"
+            <div className="flex items-center relative">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: isTyped || isCurrent ? "auto" : 0 }}
+                transition={{ 
+                  duration: isCurrent ? 1.2 : 0, 
+                  ease: "linear" 
+                }}
+                style={{ 
+                  overflow: 'hidden', 
+                  whiteSpace: 'nowrap',
+                  display: 'inline-block'
+                }}
               >
-                ???
-              </motion.span>
-            )}
+                {line.content}
+              </motion.div>
+              
+              {(isCurrent || (phase === 'hold' && isLastLine)) && (
+                <motion.span 
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 0.6, repeat: Infinity, ease: "steps(2)" }}
+                  className="ml-0.5 font-black text-neon-cyan drop-shadow-[0_0_10px_rgba(0,209,255,1)]"
+                  style={{ width: '2px', display: 'inline-block' }}
+                >
+                  |
+                </motion.span>
+              )}
+            </div>
           </div>
         );
       })}
@@ -252,62 +259,54 @@ const LandingPage = ({ onLaunch }) => {
                 )}
               </button>
             ))}
-            <a href="https://github.com/harshlagwal/PyViz-Sandbox" target="_blank" rel="noopener noreferrer" className="nav-item-link">GitHub</a>
           </div>
 
-          <div className="nav-actions flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 md:hidden text-white active:opacity-50 transition-all"
-            >
-              <MenuIcon size={24} />
-            </button>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onLaunch} 
+              onClick={onLaunch}
               className="btn-nav-launch hidden md:block"
             >
               Launch IDE
-            </motion.button>
+            </button>
+            
+            <button 
+              className="md:hidden text-white p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
+            </button>
           </div>
         </div>
 
-        {/* 📱 MOBILE NAVIGATION DROPDOWN */}
-        <motion.div 
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ 
-            height: isMenuOpen ? 'auto' : 0, 
-            opacity: isMenuOpen ? 1 : 0 
-          }}
-          className="md:hidden overflow-hidden bg-[#0b0f19e0] backdrop-blur-xl border-b border-white/10"
-        >
-          <div className="flex flex-col p-6 space-y-4">
-            {navItems.map((item) => (
-              <button 
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="text-left text-lg font-bold text-slate-300 active:text-neon-cyan active:opacity-50"
-              >
-                {item.label}
-              </button>
-            ))}
-            <a 
-              href="https://github.com/harshlagwal/PyViz-Sandbox" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-lg font-bold text-slate-300"
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-[#0b0f19]/95 backdrop-blur-xl border-b border-white/10 overflow-hidden"
             >
-              GitHub
-            </a>
-            <button 
-              onClick={onLaunch} 
-              className="w-full py-3 bg-neon-cyan/20 border border-neon-cyan/30 rounded-xl text-neon-cyan font-black uppercase tracking-widest text-[10px]"
-            >
-              Launch IDE
-            </button>
-          </div>
-        </motion.div>
+              <div className="p-6 flex flex-col gap-6">
+                {navItems.map((item) => (
+                  <button 
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className="text-left text-lg font-medium text-white/70 hover:text-cyan-400 transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <button 
+                  onClick={onLaunch}
+                  className="w-full py-4 bg-cyan-500 text-black font-bold rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+                >
+                  Launch IDE
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* 2. HERO SECTION */}
@@ -630,7 +629,6 @@ const LandingPage = ({ onLaunch }) => {
         </motion.div>
       </section>
 
-      {/* 5. FOOTER (SIMPLE - MATCH IMAGE 1) */}
       <footer className="footer-simple">
         <div className="footer-simple-inner">
           <Logo height={24} />
