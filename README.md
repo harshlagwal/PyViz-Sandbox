@@ -35,7 +35,7 @@ Get your zero-latency ecosystem running locally in under 60 seconds:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/pyviz-sandbox.git
+git clone https://github.com/harshlagwal/PyViz-Sandbox.git
 
 # Navigate into the project directory
 cd pyviz-sandbox
