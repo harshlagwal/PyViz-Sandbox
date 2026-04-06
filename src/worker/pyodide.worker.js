@@ -84,7 +84,7 @@ def get_outputs():
             if hasattr(val, 'to_html'):
                 # Ensure titles have breathing room (t=50) if not set by user
                 val.update_layout(margin=dict(t=50))
-                val = pio.to_html(val, include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'staticPlot': True, 'displayModeBar': False, 'scrollZoom': False, 'editable': False})
+                val = pio.to_html(val, include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'staticPlot': False, 'displayModeBar': False, 'scrollZoom': False, 'editable': False})
             outputs.append({'type': 'html', 'data': str(val)})
             # We don't pop it here to allow persistent view, but we'll clear it in the run loop if needed
     except Exception as e:
@@ -205,7 +205,7 @@ except ImportError:
 import plotly.io as pio
 fig = ${result}
 fig.update_layout(margin=dict(t=50))
-pio.to_html(fig, include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'staticPlot': True, 'displayModeBar': False, 'scrollZoom': False, 'editable': False})
+pio.to_html(fig, include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'staticPlot': False, 'displayModeBar': False, 'scrollZoom': False, 'editable': False})
                 `);
                 finalOutputs.push({ type: 'html', data: html_data });
             } else if (result && typeof result === 'string' && (result.includes('<div') || result.includes('plotly'))) {
@@ -221,7 +221,7 @@ if 'OUTPUT_HTML' in globals() and globals()['OUTPUT_HTML']:
         import plotly.io as pio
         # If it's a figure object, re-render with responsive config and no modebar
         if hasattr(globals()['OUTPUT_HTML'], 'to_html'):
-            globals()['OUTPUT_HTML'] = pio.to_html(globals()['OUTPUT_HTML'], include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'staticPlot': True, 'displayModeBar': False, 'scrollZoom': False, 'editable': False})
+            globals()['OUTPUT_HTML'] = pio.to_html(globals()['OUTPUT_HTML'], include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'staticPlot': False, 'displayModeBar': False, 'scrollZoom': False, 'editable': False})
     except Exception as innerErr:
         import sys
         print(f"Error handling OUTPUT_HTML: {innerErr}", file=sys.stderr)
