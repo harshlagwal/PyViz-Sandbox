@@ -172,6 +172,24 @@ json.dumps(json.loads(summary)) # sanitize
                 await pyodide.loadPackage('micropip');
                 self.postMessage({ type: 'stdout', content: ' [PKG] Installing Plotly via micropip (This may take 10-15s)...' });
                 await pyodide.runPythonAsync("import micropip\nawait micropip.install('plotly')");
+                
+                // Crucial: Monkey-patch Plotly's show() so standard Plotly scripts render on our visual canvas
+                await pyodide.runPythonAsync(`
+import sys
+try:
+    import plotly.graph_objs as go
+    import plotly.io as pio
+
+    def _patched_plotly_show(fig, *args, **kwargs):
+        # We store the latest figure explicitly to the global namespace that Pyodide reads
+        sys.modules['__main__'].OUTPUT_HTML = fig
+
+    go.Figure.show = _patched_plotly_show
+    pio.show = lambda fig, *args, **kwargs: _patched_plotly_show(fig, *args, **kwargs)
+except ImportError:
+    pass
+                `);
+
                 self.postMessage({ type: 'stdout', content: ' [PKG] Plotly installed successfully.' });
             }
 
