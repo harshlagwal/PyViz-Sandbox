@@ -1,0 +1,8 @@
+75535c1 Restore desktop grid and flex configurations across landing page
+0c7a4ac Implement mobile-first responsive layout for main IDE workspace
+0a6a7da Enhance mobile responsiveness on landing page
+d201832 ???? seo: add google site verification tag
+c29c3d4 ???? seo: inject premium meta tags for search indexing
+90d8477 ???? fix: update GitHub nav link to point to actual repository
+55429f1 ???? docs: update git clone url to actual repository
+58b76cc ???? Initial Release: PyViz Sandbox v1.0 - Zero Latency Local IDE
