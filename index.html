@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="PyViz Sandbox IDE - A premium, purely client-side Python playground for data science and visualization in the browser." />
+    <title>PyViz Sandbox IDE | Browser-based Data Viz</title>
+    
+    <!-- Premium Typography: Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+      #loading-screen {
+        position: fixed;
+        inset: 0;
+        background: #0E1117;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-family: 'Space Grotesk', sans-serif;
+        color: #e1e2eb;
+      }
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #191c22;
+        border-bottom-color: #00d1ff;
+        border-radius: 50%;
+        animation: rotation 1s linear infinite;
+        margin-bottom: 24px;
+      }
+      @keyframes rotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading-screen">
+      <div class="loader"></div>
+      <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.15em; opacity: 0.9; text-transform: uppercase;">PyViz Sandbox</div>
+      <div style="font-size: 10px; margin-top: 10px; opacity: 0.4; letter-spacing: 0.05em;">THE KINETIC SHADOW SYSTEM</div>
+    </div>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      window.onload = () => {
+        setTimeout(() => {
+          const loader = document.getElementById('loading-screen');
+          if (loader) loader.style.display = 'none';
+        }, 1200);
+      };
+    </script>
+  </body>
+</html>
