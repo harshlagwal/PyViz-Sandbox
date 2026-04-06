@@ -2867,3 +2867,28 @@ html, body, #root {
   display: flex;
   flex-direction: column;
 }
+
+/* DESKTOP LAYOUT CORE */
+.ide-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+.middle-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.visuals-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-dark);
+}
