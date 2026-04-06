@@ -2818,6 +2818,11 @@ html, body, #root {
   }
 }
 
+.plotly-view-only {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
 @media (max-width: 480px) {
   .hero-title { font-size: 32px !important; }
   .app-run-btn span { display: none !important; } /* Only show Icon on tiny mobile */

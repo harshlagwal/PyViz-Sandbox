@@ -526,7 +526,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
                             {plot.type === 'html' ? (
                                <iframe 
                                  srcDoc={plot.data}
-                                 className="w-full h-[300px] border-none"
+                                 className="w-full h-[300px] border-none plotly-view-only"
                                  title={`plot-${i}`}
                                />
                             ) : (
@@ -595,7 +595,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
            </div>
            <div className="flex-1 overflow-hidden p-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
               {expandedPlot.type === 'html' ? (
-                  <iframe srcDoc={expandedPlot.data} className="w-full h-full border-none bg-[#0b0f19]" />
+                  <iframe srcDoc={expandedPlot.data} className="w-full h-full border-none bg-[#0b0f19] plotly-view-only" />
               ) : (
                   <img src={`data:image/png;base64,${expandedPlot.data}`} className="max-w-full max-h-full object-contain" alt="Expanded Plot" />
               )}
@@ -749,7 +749,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
                   <div key={i} className="relative group w-full">
                     <div className="flex justify-end mb-2"><button onClick={() => downloadPlot(plot, i)} className="btn-secondary-pill py-1"><Download size={13} /><span>Save</span></button></div>
                     <div className="bg-[#0E1117] rounded-xl border border-white/5 overflow-hidden shadow-2xl">
-                        {plot.type === 'html' ? <iframe ref={el => iframeRefs.current[i] = el} srcDoc={plot.data} className="w-full min-h-[400px] border-none" /> : <img src={`data:image/png;base64,${plot.data}`} className="w-full h-auto" />}
+                        {plot.type === 'html' ? <iframe ref={el => iframeRefs.current[i] = el} srcDoc={plot.data} className="w-full min-h-[400px] border-none plotly-view-only" /> : <img src={`data:image/png;base64,${plot.data}`} className="w-full h-auto" />}
                     </div>
                   </div>
                 ))}
