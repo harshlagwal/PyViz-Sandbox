@@ -93,9 +93,11 @@
   box-shadow: 0 0 12px var(--primary-container);
 }
 
-.nav-links {
-  display: flex;
-  gap: 32px;
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+    gap: 32px;
+  }
 }
 
 .nav-links a {
@@ -262,10 +264,12 @@
 .gap-3 { gap: 12px; }
 .ml-1 { margin-left: 4px; }
 
-.nav-links-center {
-  display: flex;
-  gap: 32px;
-  align-items: center;
+@media (min-width: 768px) {
+  .nav-links-center {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
 }
 
 .nav-item-btn {
@@ -2817,4 +2821,20 @@ html, body, #root {
 @media (max-width: 480px) {
   .hero-title { font-size: 32px !important; }
   .app-run-btn span { display: none !important; } /* Only show Icon on tiny mobile */
+}
+/* NEON PULSE ANIMATION */
+@keyframes neon-pulse {
+  0%, 100% { 
+    opacity: 1; 
+    box-shadow: 0 0 10px #00d1ff, 0 0 20px rgba(0, 209, 255, 0.4); 
+  }
+  50% { 
+    opacity: 0.6; 
+    box-shadow: 0 0 5px #00d1ff, 0 0 10px rgba(0, 209, 255, 0.2); 
+  }
+}
+
+.neon-line {
+  animation: neon-pulse 2s infinite ease-in-out;
+  background: #00d1ff;
 }

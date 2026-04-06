@@ -10,7 +10,9 @@ import {
   Settings, 
   ArrowRight,
   Code as CodeIcon,
-  Upload
+  Upload,
+  X,
+  Menu as MenuIcon
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -169,6 +171,7 @@ const navItems = [
 
 const LandingPage = ({ onLaunch }) => {
   const [activeSection, setActiveSection] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredSection, setHoveredSection] = useState(null);
 
   useEffect(() => {
@@ -194,8 +197,8 @@ const LandingPage = ({ onLaunch }) => {
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) {
-      // Using native scrollIntoView is more reliable across browsers
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setIsMenuOpen(false); // Auto-close on nav
     }
   };
 
@@ -252,17 +255,59 @@ const LandingPage = ({ onLaunch }) => {
             <a href="https://github.com/harshlagwal/PyViz-Sandbox" target="_blank" rel="noopener noreferrer" className="nav-item-link">GitHub</a>
           </div>
 
-          <div className="nav-actions">
+          <div className="nav-actions flex items-center gap-3">
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 md:hidden text-white active:opacity-50 transition-all"
+            >
+              <MenuIcon size={24} />
+            </button>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onLaunch} 
-              className="btn-nav-launch"
+              className="btn-nav-launch hidden md:block"
             >
               Launch IDE
             </motion.button>
           </div>
         </div>
+
+        {/* 📱 MOBILE NAVIGATION DROPDOWN */}
+        <motion.div 
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ 
+            height: isMenuOpen ? 'auto' : 0, 
+            opacity: isMenuOpen ? 1 : 0 
+          }}
+          className="md:hidden overflow-hidden bg-[#0b0f19e0] backdrop-blur-xl border-b border-white/10"
+        >
+          <div className="flex flex-col p-6 space-y-4">
+            {navItems.map((item) => (
+              <button 
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className="text-left text-lg font-bold text-slate-300 active:text-neon-cyan active:opacity-50"
+              >
+                {item.label}
+              </button>
+            ))}
+            <a 
+              href="https://github.com/harshlagwal/PyViz-Sandbox" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-lg font-bold text-slate-300"
+            >
+              GitHub
+            </a>
+            <button 
+              onClick={onLaunch} 
+              className="w-full py-3 bg-neon-cyan/20 border border-neon-cyan/30 rounded-xl text-neon-cyan font-black uppercase tracking-widest text-[10px]"
+            >
+              Launch IDE
+            </button>
+          </div>
+        </motion.div>
       </motion.nav>
 
       {/* 2. HERO SECTION */}
@@ -390,6 +435,7 @@ const LandingPage = ({ onLaunch }) => {
               <div className={`feature-icon-box ${feature.color}`}>
                 {feature.icon}
               </div>
+              <div className="neon-line h-8 w-[1px] my-6" />
               <h3>{feature.title}</h3>
               <p>{feature.desc}</p>
             </motion.div>
@@ -503,6 +549,7 @@ const LandingPage = ({ onLaunch }) => {
             style={{ borderRadius: '24px', padding: '40px', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.01)' }}
           >
             <h3 className="text-lg font-bold text-slate-500 mb-8 text-center uppercase tracking-widest">Traditional Cloud IDEs</h3>
+            <div className="neon-line h-[1px] w-12 mx-auto mb-8 opacity-40" />
             <div className="space-y-8" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {[
                 { title: "Latency", text: "High network latency, waiting for kernel restarts" },
@@ -534,6 +581,7 @@ const LandingPage = ({ onLaunch }) => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00ffa3] opacity-10 blur-[80px] rounded-full pointer-events-none" />
             
             <h3 className="text-xl font-black text-white mb-8 text-center uppercase tracking-widest" style={{ textShadow: '0 0 20px rgba(0,209,255,0.6)' }}>PyViz Sandbox</h3>
+            <div className="neon-line h-[1px] w-12 mx-auto mb-8 shadow-[0_0_15px_rgba(0,209,255,0.8)]" />
             <div className="space-y-8 relative z-10" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {[
                 { title: "Latency", text: "0ms, Instant execution via WASM" },
@@ -586,7 +634,7 @@ const LandingPage = ({ onLaunch }) => {
       <footer className="footer-simple">
         <div className="footer-simple-inner">
           <Logo height={24} />
-          <p className="footer-simple-copy">?? 2026 PyViz Sandbox. Built by Harsh lagwal</p>
+          <p className="footer-simple-copy">© 2026 PyViz Sandbox. Built by Harsh lagwal</p>
         </div>
       </footer>
     </div>
