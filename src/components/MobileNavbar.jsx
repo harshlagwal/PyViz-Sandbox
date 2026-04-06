@@ -12,12 +12,6 @@ const MobileNavbar = ({ onRun, isRunning, isInitializing, onOpenMenu }) => {
         >
           <Menu size={22} />
         </button>
-        <button 
-          className="p-2 text-slate-400 hover:text-white active:opacity-50 transition-all cursor-pointer"
-          onClick={() => {/* Trigger mobile search if needed */}}
-        >
-          <Search size={18} />
-        </button>
       </div>
 
       <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">

@@ -37,6 +37,7 @@ import HistoryView from './components/HistoryView';
 import SettingsView from './components/SettingsView';
 import MobileNavbar from './components/MobileNavbar';
 import MobileBottomNav from './components/MobileBottomNav';
+import MobileSidebar from './components/MobileSidebar';
 
 import LandingPage from './components/LandingPage';
 import { saveProject } from './utils/storage';
@@ -440,6 +441,20 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
           isRunning={isRunning} 
           isInitializing={isInitializing} 
           onOpenMenu={() => setIsSidebarOpen(true)}
+        />
+
+        <MobileSidebar 
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          onSaveProject={handleSaveProject}
+          onDownloadScript={handleDownloadScript}
+          onUndo={handleUndo}
+          onRedo={handleRedo}
+          onToggleTerminal={() => setIsTerminalOpen(!isTerminalOpen)}
+          isTerminalOpen={isTerminalOpen}
+          onClearLogs={clearOutput}
+          onRestartEngine={handleRestartEngine}
+          isInitializing={isInitializing}
         />
         
         <div className="flex-1 pt-14 pb-16 px-4 flex flex-col gap-6">
