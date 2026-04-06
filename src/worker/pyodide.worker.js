@@ -193,33 +193,50 @@ pio.to_html(fig, include_plotlyjs='cdn', full_html=False, config={'responsive': 
             } else if (result && typeof result === 'string' && (result.includes('<div') || result.includes('plotly'))) {
                 finalOutputs.push({ type: 'html', data: result });
             } 
-            // 4b. Priority 2: Explicit OUTPUT_HTML Global
+            // 4b. Priority 2: Explicit OUTPUT_HTML Global or General Output extraction (Matplotlib/Plotly)
             else {
                 try {
                     // Update: Force Plotly responsiveness and Hide ModeBar in global capture
                     pyodide.runPython(`
 if 'OUTPUT_HTML' in globals() and globals()['OUTPUT_HTML']:
-    import plotly.io as pio
-    # If it's a figure object, re-render with responsive config and no modebar
-    if hasattr(globals()['OUTPUT_HTML'], 'to_html'):
-        globals()['OUTPUT_HTML'] = pio.to_html(globals()['OUTPUT_HTML'], include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'displayModeBar': False})
+    try:
+        import plotly.io as pio
+        # If it's a figure object, re-render with responsive config and no modebar
+        if hasattr(globals()['OUTPUT_HTML'], 'to_html'):
+            globals()['OUTPUT_HTML'] = pio.to_html(globals()['OUTPUT_HTML'], include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'displayModeBar': False})
+    except Exception as innerErr:
+        import sys
+        print(f"Error handling OUTPUT_HTML: {innerErr}", file=sys.stderr)
                     `);
                     
-                    const captured = pyodide.runPython("get_outputs()").toJs();
-                    const htmlOutput = captured.find(o => o.type === 'html');
-                    const imgOutputs = captured.filter(o => o.type === 'image');
+                    // Safely convert Pyodide lists of dicts to JS Arrays of Objects
+                    const capturedProxy = pyodide.runPython("get_outputs()");
+                    const captured = capturedProxy.toJs({ dict_converter: Object.fromEntries });
+                    capturedProxy.destroy();
 
-                    if (htmlOutput) {
-                        finalOutputs.push(htmlOutput);
-                    } else if (imgOutputs.length > 0) {
-                        // Capture all images if no HTML is present
-                        finalOutputs = imgOutputs;
+                    if (Array.isArray(captured)) {
+                        const htmlOutput = captured.find(o => o.type === 'html' || o.get?.('type') === 'html');
+                        const imgOutputs = captured.filter(o => o.type === 'image' || o.get?.('type') === 'image');
+
+                        if (htmlOutput) {
+                            finalOutputs.push({
+                                type: 'html', 
+                                data: htmlOutput.data || htmlOutput.get?.('data')
+                            });
+                        } else if (imgOutputs.length > 0) {
+                            // Capture all images if no HTML is present
+                            finalOutputs = imgOutputs.map(img => ({
+                                type: 'image',
+                                data: img.data || img.get?.('data')
+                            }));
+                        }
                     }
                     
                     // Cleanup
                     pyodide.runPython("globals().update({'OUTPUT_HTML': None})");
                 } catch (pErr) {
                     console.error("Output Fetch Error:", pErr);
+                    self.postMessage({ type: 'stderr', content: `Extraction Error: ${pErr.message}` });
                 }
             }
 
