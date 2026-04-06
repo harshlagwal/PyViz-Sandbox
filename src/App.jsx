@@ -23,7 +23,8 @@ import {
   LayoutGrid,
   Maximize2,
   Folder,
-  Save
+  Save,
+  Menu
 } from 'lucide-react';
 import Logo from './components/Logo';
 import VirtualFileExplorer from './components/VirtualFileExplorer';
@@ -144,6 +145,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
   const [toast, setToast] = useState(null);
   const [expandedPlot, setExpandedPlot] = useState(null);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(220);
   
   // Settings State
@@ -425,6 +427,11 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
       {/* 1. HEADER: SLOTS (LOGO | DROPZONE | RUN) */}
       <header className="header font-display">
         <div className="logo-block pr-4 mr-4 border-r border-white/10 h-6 flex items-center">
+          <Menu 
+            size={18} 
+            className="md:hidden mr-3 text-slate-400 cursor-pointer hover:text-white" 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
           <Logo height={18} />
         </div>
 
@@ -492,7 +499,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
       <main className="ide-layout">
         
         {/* COLUMN 1: SLIM ICON SIDEBAR (60px) */}
-        <aside className="sidebar-icons">
+        <aside className={`sidebar-icons ${isSidebarOpen ? 'flex absolute left-0 top-[48px] z-50 h-[calc(100vh-48px)] !bg-[#0E1117] shadow-xl border-r border-[#2D3139]' : 'hidden'} md:flex relative`}>
           <div className="icon-group">
             <div data-tooltip="Code Editor" onClick={() => setActiveSidebarView('editor')}>
               <FileCode className={`sidebar-icon ${activeSidebarView === 'editor' ? 'active' : ''}`} />

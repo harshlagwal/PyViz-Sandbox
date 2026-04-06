@@ -2491,3 +2491,74 @@ html, body, #root {
 .delete-btn:hover {
   color: #ff4d4d;
 }
+
+/* ---------------------------------------------------------
+   MOBILE APP RESPONSIVENESS (IDE)
+   --------------------------------------------------------- */
+@media (max-width: 768px) {
+  .ide-layout {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: calc(100vh - 48px) !important;
+  }
+  
+  .middle-column {
+    width: 100% !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 50vh !important;
+    border-right: none !important;
+  }
+  
+  /* Force the CodeMirror stage to collapse nicely and allow horizontal scrolling */
+  .editor-stage {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .cm-content, .cm-line {
+    white-space: pre !important; 
+    word-break: normal !important;
+  }
+
+  .cm-scroller {
+    overflow-x: auto !important;
+    width: 100% !important;
+  }
+
+  .visuals-column {
+    width: 100% !important;
+    flex: none !important;
+    border-left: none !important;
+    border-top: 1px solid #2D3139;
+    height: auto !important;
+    min-height: 50vh !important;
+    overflow: visible !important;
+  }
+  
+  /* Hide the desktop splitter handles */
+  .vertical-resizer, .collapse-toggle {
+    display: none !important;
+  }
+  
+  .bottom-dock {
+    width: 100% !important;
+    position: relative !important;
+    flex: none !important;
+  }
+
+  /* Header adjustments for space */
+  .header-actions .btn-secondary-pill {
+    display: none !important; /* Hide secondary buttons to save space */
+  }
+  
+  .header-center {
+    display: none !important; /* Hide drag-and-drop zone entirely to save space */
+  }
+
+  /* Disable hover tooltips on touch devices / small screens to prevent sticky tooltips */
+  .sidebar-icons [data-tooltip]::after {
+    display: none !important;
+  }
+}
