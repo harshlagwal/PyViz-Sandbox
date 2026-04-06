@@ -422,16 +422,17 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
     <div className="main-app-viewport font-body">
       {/* 1. HEADER: SLOTS (LOGO | DROPZONE | RUN) */}
       <header className="header font-display">
-        <div className="logo-block pr-4 mr-4 border-r border-white/10 h-6 flex items-center">
+        <div className="logo-block">
           <Menu 
             size={18} 
-            className="md:hidden mr-3 text-slate-400 cursor-pointer hover:text-white" 
+            className="mobile-menu-icon" 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           />
           <Logo height={18} />
         </div>
 
         <MenuBar 
+          className="hidden-mobile"
           onSaveProject={handleSaveProject}
           onDownloadScript={handleDownloadScript}
           onUndo={handleUndo}
@@ -443,7 +444,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
           isInitializing={isInitializing}
         />
 
-        <div className="header-center">
+        <div className="header-center hidden-mobile">
           {/* Styled label wraps the invisible input — no browser default text ever shown */}
           <label className="dropzone-pill" htmlFor="header-upload">
             <Upload size={14} className="text-[#00d1ff]" />
@@ -460,24 +461,18 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
         </div>
 
         <div className="header-actions">
+           {/* Desktop Visible Buttons */}
            <button 
-             className="btn-secondary-pill mr-2"
+             className="btn-secondary-pill mr-2 desktop-only"
              onClick={handleSaveProject}
              title="Save Workspace Project"
            >
              <Save size={16} />
              <span>Save</span>
            </button>
+           
            <button 
-             className="btn-secondary-pill mr-2"
-             onClick={handleShare}
-             title="Share Playground Link"
-           >
-             <Share2 size={16} />
-             <span>Share</span>
-           </button>
-           <button 
-            className="btn-cyan-pill" 
+            className="btn-cyan-pill app-run-btn" 
             onClick={handleRun}
             disabled={isInitializing || isRunning}
           >
@@ -486,7 +481,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
             ) : (
               <Play size={17} fill="#003543" />
             )}
-            <span>{isRunning ? 'Running...' : 'Run Code'}</span>
+            <span className="desktop-only">{isRunning ? 'Running...' : 'Run Code'}</span>
           </button>
         </div>
       </header>
@@ -495,7 +490,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
       <main className="ide-layout">
         
         {/* COLUMN 1: SLIM ICON SIDEBAR (60px) */}
-        <aside className={`sidebar-icons ${isSidebarOpen ? 'flex absolute left-0 top-[48px] z-50 h-[calc(100vh-48px)] !bg-[#0E1117] shadow-xl border-r border-[#2D3139]' : 'hidden'} md:flex relative`}>
+        <aside className="sidebar-icons">
           <div className="icon-group">
             <div data-tooltip="Code Editor" onClick={() => setActiveSidebarView('editor')}>
               <FileCode className={`sidebar-icon ${activeSidebarView === 'editor' ? 'active' : ''}`} />

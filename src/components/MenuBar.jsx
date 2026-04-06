@@ -80,6 +80,7 @@ const MenuBar = ({
   onClearLogs,
   onRestartEngine,
   isInitializing,
+  className = "",
 }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   const menuBarRef = useRef(null);
@@ -154,7 +155,11 @@ const MenuBar = ({
   ];
 
   return (
-    <nav ref={menuBarRef} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
+    <nav 
+      className={className} 
+      ref={menuBarRef} 
+      style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}
+    >
       {menus.map((menu) => {
         const isOpen = activeMenu === menu.name;
 

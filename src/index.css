@@ -1884,6 +1884,8 @@ html, body, #root {
     color: var(--primary);
 }
 
+
+
 .stats-table {
     width: 100%;
     border-collapse: separate;
@@ -2446,10 +2448,202 @@ html, body, #root {
   padding: 0;
 }
 
-@media (max-width: 768px) {
-  .final-cta-heading { font-size: 36px; letter-spacing: -1px; }
-  .final-cta-v2 { padding: 80px 20px; }
+
+
+/* WORKSPACE SIDEBAR STYLES */
+.workspace-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
 }
+
+.workspace-actions button {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.workspace-actions button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.project-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.project-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 209, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-info .project-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.project-info .project-date {
+  color: #8b949e;
+  font-size: 11px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+  gap: 16px;
+}
+
+.load-blueprint-btn {
+  font-size: 11px;
+  font-weight: 950;
+  color: #00d1ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.template-card-hq:hover .load-blueprint-btn {
+  opacity: 1;
+}
+
+.pro-footer-card {
+  margin-top: 48px;
+  padding: 28px;
+  background: #0E1117;
+  border: 1px solid #191c22;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  opacity: 0.8;
+}
+
+.pro-footer-card:hover {
+    opacity: 1;
+    border-color: #2D3139;
+}
+
+
+
+/* --- V2 FINAL CTA (PERFECTLY CENTERED) --- */
+.final-cta-v2 {
+  position: relative;
+  overflow: hidden;
+  padding: 120px 24px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0e1117;
+}
+
+.final-cta-v2-inner {
+  position: relative;
+  z-index: 10;
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-cta-heading {
+  font-size: clamp(44px, 7vw, 80px);
+  font-weight: 950;
+  font-family: var(--font-display);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.final-cta-sub {
+  font-size: 18px;
+  color: #859399;
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 48px;
+  max-width: 520px;
+}
+
+.btn-final-blue-elite {
+  background: #a8e1ff;
+  color: #003543;
+  padding: 18px 56px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(168, 225, 255, 0.2);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-final-blue-elite:hover {
+  background: #c2f0ff;
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(168, 225, 255, 0.35);
+}
+
+/* --- SIMPLE FOOTER (MATCH IMAGE 1) --- */
+.footer-simple {
+  background: #0a0c10;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 28px 40px;
+}
+
+.footer-simple-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.footer-simple-copy {
+  font-size: 12px;
+  color: #4a5568;
+  margin: 0;
+  padding: 0;
+}
+
+
 
 /* WORKSPACE SIDEBAR STYLES */
 .workspace-actions {
@@ -2529,115 +2723,86 @@ html, body, #root {
   color: #ff4d4d;
 }
 
-/* ---------------------------------------------------------
-   UNIFIED MOBILE RESPONSIVENESS & TOUCH OVERRIDES
-   --------------------------------------------------------- */
-@media (max-width: 768px) {
-  /* =======================================================
-     A) LANDING PAGE MOBILE FIXES 
-     ======================================================= */
-  .hero-section {
-    padding: 60px 20px !important;
+.mobile-menu-icon { display: none; }
+
+/* =======================================================
+   UNIFIED MOBILE RESPONSIVE SYSTEM (Hard Override)
+   ======================================================= */
+@media (max-width: 1024px) {
+  /* UTILS */
+  .hidden-mobile { display: none !important; }
+  .desktop-only { display: none !important; }
+  .mobile-menu-icon { display: block !important; padding-right: 12px; }
+
+  /* HEADER CLEANUP */
+  .header {
+    height: 60px !important;
+    padding: 0 16px !important;
+    justify-content: space-between !important;
   }
-  .features-section, .demo-section, .comparison-section, .final-cta-v2 {
-    padding: 60px 20px !important;
-  }
+  .logo-block { border-right: none !important; }
+  .menubar-container, .header-center { display: none !important; }
   
-  /* Strip fixed heights mapping */
-  .hero-container, .features-grid, .demo-container, .comparison-section > div {
-    width: 100% !important;
-  }
-
-  .demo-container {
-    flex-direction: column !important;
-    gap: 40px !important;
-  }
-  .features-grid {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-  .hero-title {
-    font-size: clamp(32px, 8vw, 42px) !important;
-  }
-  .demo-window, .demo-text, .feature-card {
-    width: 100% !important;
-  }
-  
-  /* Fallback grid override for inline styles */
-  .grid[style*="grid-template-columns"] {
-    grid-template-columns: 1fr !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .mockup-body, .mockup-content {
-    overflow-x: auto !important;
-    width: 100% !important;
-  }
-  .mockup-content > div {
-    min-width: max-content !important;
-  }
-
-  /* =======================================================
-     B) IDE APP LAYOUT MOBILE FIXES 
-     ======================================================= */
+  /* IDE LAYOUT: VERTICAL STACK */
   .ide-layout {
     flex-direction: column !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: calc(100vh - 48px) !important;
-  }
-  .middle-column {
-    width: 100% !important;
-    flex: none !important;
     height: auto !important;
-    min-height: 50vh !important;
-    border-right: none !important;
-  }
-  
-  .editor-stage {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
-  .cm-content, .cm-line {
-    white-space: pre !important; 
-    word-break: normal !important;
-  }
-  .cm-scroller {
-    overflow-x: auto !important;
-    width: 100% !important;
-  }
-  
-  .visuals-column {
-    width: 100% !important;
-    flex: none !important;
-    border-left: none !important;
-    border-top: 1px solid #2D3139;
-    height: auto !important;
-    min-height: 50vh !important;
-    overflow: visible !important;
-  }
-  
-  /* Hide the desktop splitters */
-  .vertical-resizer, .collapse-toggle {
-    display: none !important;
-  }
-  
-  .bottom-dock {
-    width: 100% !important;
-    position: relative !important;
-    flex: none !important;
+    overflow-y: visible !important;
+    min-height: 100vh;
   }
 
-  /* Clean up header spaces */
-  .header-actions .btn-secondary-pill {
-    display: none !important; 
+  /* SIDEBAR -> BOTTOM BAR */
+  .sidebar-icons {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 64px !important;
+    flex-direction: row !important;
+    background: #0E1117 !important;
+    border-top: 1px solid #2D3139 !important;
+    border-right: none !important;
+    z-index: 1000 !important;
+    padding: 0 20px !important;
   }
-  .header-center {
-    display: none !important; 
+  .icon-group {
+    flex-direction: row !important;
+    width: 100% !important;
+    justify-content: space-around !important;
+    align-items: center !important;
   }
-  .sidebar-icons [data-tooltip]::after {
-    display: none !important;
+  .sidebar-icon { margin: 0 !important; }
+
+  /* PANEL STYLING */
+  .middle-column, .visuals-column {
+    width: 100% !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 450px !important;
+    border: none !important;
+  }
+  .middle-column {
+    border-bottom: 2px solid #2D3139 !important;
+  }
+  .visuals-column {
+    padding-bottom: 100px !important; /* Buffer for bottom nav */
+  }
+
+  /* LANDING PAGE SCALE */
+  .hero-section { padding: 80px 20px !important; }
+  .hero-title { font-size: 38px !important; line-height: 1.2 !important; }
+  .hero-subtitle { font-size: 15px !important; padding: 0 10px !important; }
+  .features-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .btn-primary-glow.large { width: 100% !important; max-width: 320px; }
+  
+  /* IFRAME/PLOTLY FIX */
+  .visuals-canvas-area iframe {
+    width: 100% !important;
+    height: 450px !important;
   }
 }
 
+@media (max-width: 480px) {
+  .hero-title { font-size: 32px !important; }
+  .app-run-btn span { display: none !important; } /* Only show Icon on tiny mobile */
+}
