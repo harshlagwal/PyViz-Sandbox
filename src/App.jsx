@@ -513,7 +513,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
                   </div>
                 </div>
                 
-                <div className="p-4 flex flex-col gap-8 flex-1 overflow-hidden">
+                <div className="p-4 flex flex-col gap-8 flex-1 overflow-y-auto custom-scroll">
                    {plots.length === 0 ? (
                      <div className="flex-1 flex flex-col items-center justify-center py-12 opacity-30">
                         <Layout className="mb-4 text-slate-500" size={32} />

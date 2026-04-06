@@ -2843,3 +2843,27 @@ html, body, #root {
   animation: neon-pulse 2s infinite ease-in-out;
   background: #00d1ff;
 }
+
+/* CUSTOM SCROLLBAR & VISUAL CANVAS FIX */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 209, 255, 0.3);
+}
+
+.visuals-canvas-area {
+  flex: 1;
+  overflow-y: auto !important;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
