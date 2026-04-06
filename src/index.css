@@ -126,10 +126,8 @@
 
 /* HERO */
 .hero-section {
-  padding: 120px 64px;
-  max-width: 1400px;
-  margin: 0 auto;
   position: relative;
+  overflow: hidden;
 }
 
 .hero-container {
@@ -155,10 +153,9 @@
 }
 
 .hero-title {
-  font-size: 64px;
-  line-height: 1.1;
   font-family: var(--font-display);
   font-weight: 950;
+  line-height: 1.1;
   letter-spacing: -0.04em;
   margin-bottom: 24px;
   max-width: 900px;
@@ -339,9 +336,8 @@
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 950;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.04em;
   margin-bottom: 24px;
 }
@@ -515,11 +511,6 @@
 }
 
 /* FEATURES GRID */
-.features-section, .demo-section {
-  padding: 100px 64px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
 
 .section-header {
   text-align: center;
@@ -542,24 +533,11 @@
   color: var(--on-surface-variant);
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
 .feature-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 40px;
   border-radius: 20px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
 }
 
 .feature-card:hover {
@@ -600,22 +578,7 @@
 .feature-card:hover .feature-icon-box.purple { box-shadow: 0 0 40px rgba(168, 85, 247, 0.6); }
 .feature-card:hover .feature-icon-box.green { box-shadow: 0 0 40px rgba(0, 255, 163, 0.6); }
 
-.feature-card h3 {
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-
-.feature-card p {
-  font-size: 15px;
-  color: var(--on-surface-variant);
-  line-height: 1.8;
-}
-
 /* DEMO */
-.demo-section {
-  padding: 100px 40px;
-}
 
 .demo-container {
   max-width: 1200px;

@@ -72,7 +72,7 @@ const LoopingTypewriter = () => {
   }, [phase, activeLine, codeLines.length]);
 
   return (
-    <div className="typing-container" style={{ fontFamily: 'var(--font-mono)', lineHeight: '1.6', color: '#c9d1d9', fontSize: '14px' }}>
+    <div className="typing-container overflow-x-auto w-full" style={{ fontFamily: 'var(--font-mono)', lineHeight: '1.6', color: '#c9d1d9', fontSize: '14px' }}>
       {codeLines.map((line, idx) => {
         const isTyped = idx < activeLine || phase === 'hold';
         const isCurrent = idx === activeLine && phase === 'typing';
@@ -266,7 +266,7 @@ const LandingPage = ({ onLaunch }) => {
       </motion.nav>
 
       {/* 2. HERO SECTION */}
-      <header className="hero-section">
+      <header className="hero-section px-4 md:px-12 max-w-7xl mx-auto py-12 md:py-24 w-full">
         <ParticleBackground />
         <div className="hero-glow-blob" />
         <motion.div 
@@ -279,7 +279,7 @@ const LandingPage = ({ onLaunch }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            className="hero-title"
+            className="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-[64px]"
             style={{ textAlign: 'center', margin: '0 auto 24px auto' }}
           >
             Your Data. Your Browser.<br/>
@@ -325,7 +325,7 @@ const LandingPage = ({ onLaunch }) => {
                    <div className="dots"><span /><span /><span /></div>
                    <div className="tab">script.py</div>
                 </div>
-                <div className="mockup-body" style={{ background: '#0E1117', padding: '24px', borderRadius: '0 0 20px 20px', textAlign: 'left' }}>
+                <div className="mockup-body overflow-x-auto" style={{ background: '#0E1117', padding: '24px', borderRadius: '0 0 20px 20px', textAlign: 'left' }}>
                    <LoopingTypewriter />
                 </div>
                 <div className="mockup-glow" />
@@ -335,7 +335,7 @@ const LandingPage = ({ onLaunch }) => {
       </header>
 
       {/* 3. FEATURES GRID */}
-      <section id="features" className="features-section">
+      <section id="features" className="features-section px-4 md:px-12 max-w-7xl mx-auto py-12 md:py-24 w-full">
         <div className="section-header">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
@@ -355,7 +355,7 @@ const LandingPage = ({ onLaunch }) => {
           </motion.p>
         </div>
 
-        <div className="features-grid">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1100px] mx-auto w-full">
           {[
             { 
               icon: <Upload size={32} />, 
@@ -385,13 +385,13 @@ const LandingPage = ({ onLaunch }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, ease: "easeOut", delay: feature.delay }}
-              className="feature-card"
+              className="feature-card flex flex-col items-center text-center p-8 md:p-10 w-full"
             >
               <div className={`feature-icon-box ${feature.color}`}>
                 {feature.icon}
               </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.desc}</p>
+              <h3 className="text-xl md:text-[22px] font-extrabold mb-3">{feature.title}</h3>
+              <p className="text-base md:text-[15px] text-[#859399] leading-relaxed">{feature.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -399,7 +399,7 @@ const LandingPage = ({ onLaunch }) => {
 
 
       {/* 4. DEMO / SPLIT-PANE PREVIEW */}
-      <section id="demo" className="demo-section">
+      <section id="demo" className="demo-section px-4 md:px-12 max-w-7xl mx-auto py-12 md:py-24 w-full">
         <div className="demo-container">
           <motion.div 
             initial={{ opacity: 0, x: -40 }}
@@ -432,8 +432,8 @@ const LandingPage = ({ onLaunch }) => {
             className="demo-window"
           >
              <div className="window-pane code-pane">
-                <div className="mockup-content">
-                <div style={{ fontFamily: 'monospace', lineHeight: '1.6', color: '#c9d1d9', fontSize: '14px' }}>
+                <div className="mockup-content overflow-x-auto w-full">
+                <div style={{ fontFamily: 'monospace', lineHeight: '1.6', color: '#c9d1d9', fontSize: '14px', minWidth: 'max-content' }}>
                   <div><span style={{ color: '#ff7b72' }}>import</span> pandas <span style={{ color: '#ff7b72' }}>as</span> pd</div>
                   <div><span style={{ color: '#ff7b72' }}>import</span> matplotlib.pyplot <span style={{ color: '#ff7b72' }}>as</span> plt</div>
                   <br />
@@ -473,7 +473,7 @@ const LandingPage = ({ onLaunch }) => {
 
 
       {/* 4.1 WHY WE ARE DIFFERENT SECTION (US VS THEM) */}
-      <section className="comparison-section" style={{ padding: '100px 40px', maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="comparison-section px-4 md:px-12 max-w-7xl mx-auto py-12 md:py-24 w-full">
         <div className="section-header text-center mb-16">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
@@ -493,14 +493,14 @@ const LandingPage = ({ onLaunch }) => {
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-[1000px] mx-auto" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px] mx-auto w-full">
           {/* TRADITIONAL CLOUD (Left / Inferior) */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl p-8 border border-white/5 bg-white/[0.01] opacity-60"
-            style={{ borderRadius: '24px', padding: '40px', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.01)' }}
+            className="rounded-2xl p-6 md:p-10 border border-white/5 bg-white/[0.01] opacity-60 w-full"
+            style={{ borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.01)' }}
           >
             <h3 className="text-lg font-bold text-slate-500 mb-8 text-center uppercase tracking-widest">Traditional Cloud IDEs</h3>
             <div className="space-y-8" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -526,8 +526,8 @@ const LandingPage = ({ onLaunch }) => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl p-8 relative overflow-hidden shadow-2xl"
-            style={{ borderRadius: '24px', padding: '40px', border: '1px solid rgba(0, 209, 255, 0.3)', background: 'rgba(0, 209, 255, 0.03)', boxShadow: '0 0 40px rgba(0, 209, 255, 0.1)' }}
+            className="rounded-2xl p-6 md:p-10 relative overflow-hidden shadow-2xl w-full"
+            style={{ borderRadius: '24px', border: '1px solid rgba(0, 209, 255, 0.3)', background: 'rgba(0, 209, 255, 0.03)', boxShadow: '0 0 40px rgba(0, 209, 255, 0.1)' }}
           >
             {/* Glow blobs inside card */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#00d1ff] opacity-10 blur-[80px] rounded-full pointer-events-none" />
@@ -555,7 +555,7 @@ const LandingPage = ({ onLaunch }) => {
       </section>
 
       {/* 4.5 FINAL CTA SECTION (ELITE CENTERED) */}
-      <section className="final-cta-v2">
+      <section className="final-cta-v2 px-4 md:px-12 max-w-7xl mx-auto py-12 md:py-24 w-full">
         <div className="hero-glow-blob" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.15 }} />
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
