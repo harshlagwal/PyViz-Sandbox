@@ -35,6 +35,8 @@ import Toast from './components/Toast';
 import SearchView from './components/SearchView';
 import HistoryView from './components/HistoryView';
 import SettingsView from './components/SettingsView';
+import MobileNavbar from './components/MobileNavbar';
+import MobileBottomNav from './components/MobileBottomNav';
 
 import LandingPage from './components/LandingPage';
 import { saveProject } from './utils/storage';
@@ -414,83 +416,217 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
     link.click();
   };
 
+  // ── RENDERER ──
   if (view === 'landing') {
     return <LandingPage onLaunch={() => setView('app')} />;
   }
 
   return (
-    <div className="main-app-viewport font-body">
-      {/* 1. HEADER: SLOTS (LOGO | DROPZONE | RUN) */}
+    <div className="main-app-viewport font-body overflow-hidden h-screen flex flex-col bg-[#0b0f19]">
+      {/* 💻 DESKTOP LAYOUT (>=768px) */}
+      <div className="hidden md:flex flex-col flex-1 overflow-hidden">
+        {renderHeader()}
+        <main className="ide-layout">
+          {renderSidebar()}
+          {renderMiddleColumn()}
+          {renderVisualsColumn()}
+        </main>
+      </div>
+
+      {/* 📱 MOBILE LAYOUT (<768px) */}
+      <div className="flex md:hidden flex-col flex-1 overflow-x-hidden overflow-y-auto">
+        <MobileNavbar 
+          onRun={handleRun} 
+          isRunning={isRunning} 
+          isInitializing={isInitializing} 
+          onOpenMenu={() => setIsSidebarOpen(true)}
+        />
+        
+        <div className="flex-1 pt-14 pb-16 px-4 flex flex-col gap-6">
+          {activeSidebarView === 'editor' ? (
+            <>
+              {/* 1. EDITOR: script.py */}
+              <div className="bg-[#101319c0] border border-white/5 rounded-2xl overflow-hidden glass-morphism shadow-2xl">
+                <div className="px-4 py-2 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileCode size={14} className="text-neon-cyan" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">script.py</span>
+                  </div>
+                </div>
+                <div className="h-[300px]">
+                  <Editor key={editorKey} value={code} onChange={setCode} ref={editorRef} fontSize={fontSize} />
+                </div>
+              </div>
+
+              {/* 2. DROPZONE: CSV Widget */}
+              <div className="bg-[#101319c0] border border-white/5 rounded-2xl p-6 glass-morphism shadow-2xl">
+                 <label className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-xl p-8 hover:border-neon-cyan/20 transition-all cursor-pointer" htmlFor="mobile-upload">
+                    <Upload size={24} className="text-neon-cyan mb-3 opacity-50" />
+                    <span className="text-xs font-bold text-slate-300 text-center">Drop <strong className="text-white">.CSV</strong> here or <strong className="text-neon-cyan">Browse Files</strong></span>
+                    <input 
+                      id="mobile-upload"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileUpload} 
+                      multiple 
+                      onClick={(e) => { e.target.value = null; }}
+                    />
+                 </label>
+                 {files.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                       {files.map(f => (
+                         <div key={f.name} className="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-white/5">
+                            <span className="text-[10px] font-mono text-slate-400 truncate max-w-[150px]">{f.name}</span>
+                            <XCircle size={14} className="text-slate-600 cursor-pointer" onClick={() => removeFile(f.name)} />
+                         </div>
+                       ))}
+                    </div>
+                 )}
+              </div>
+
+              {/* 3. VISUAL CANVAS: Results */}
+              <div className="bg-[#101319c0] border border-white/5 rounded-2xl overflow-hidden glass-morphism shadow-2xl min-h-[400px]">
+                <div className="px-4 py-3 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BarChart3 size={14} className="text-[#a8e1ff]" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#a8e1ff]">Visual Canvas</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="p-1.5 rounded bg-white/5 text-slate-400" onClick={() => setExpandedPlot(plots[0])}>
+                       <Maximize2 size={12} />
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="p-4 flex flex-col gap-8 flex-1 overflow-hidden">
+                   {plots.length === 0 ? (
+                     <div className="flex-1 flex flex-col items-center justify-center py-12 opacity-30">
+                        <Layout className="mb-4 text-slate-500" size={32} />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Awaiting Analysis...</span>
+                     </div>
+                   ) : (
+                     plots.map((plot, i) => (
+                       <div key={i} className="flex flex-col gap-2">
+                          <div className="bg-[#0b0f19] rounded-xl overflow-hidden border border-white/5 shadow-inner">
+                            {plot.type === 'html' ? (
+                               <iframe 
+                                 srcDoc={plot.data}
+                                 className="w-full h-[300px] border-none"
+                                 title={`plot-${i}`}
+                               />
+                            ) : (
+                               <img src={`data:image/png;base64,${plot.data}`} className="w-full h-auto" alt="plot" />
+                            )}
+                          </div>
+                          <button onClick={() => downloadPlot(plot, i)} className="text-[10px] font-bold text-neon-cyan uppercase self-end flex items-center gap-1 mt-1">
+                             <Download size={10} /> Save Image
+                          </button>
+                       </div>
+                     ))
+                   )}
+                </div>
+              </div>
+
+              {/* 4. TERMINAL: Logs */}
+              <div className="bg-[#0b0c10] border border-white/5 rounded-2xl overflow-hidden mb-8 shadow-2xl">
+                 <div className="px-4 py-2 bg-white/5 border-b border-white/5 flex items-center gap-2">
+                    <TerminalIcon size={12} className="text-slate-500" />
+                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">WASM Execution Log</span>
+                 </div>
+                 <div className="p-4 max-h-[200px] overflow-y-auto custom-scroll font-mono text-[11px]">
+                    {output.map((line, i) => (
+                      <div key={i} className="mb-1 leading-relaxed" style={{ color: line.type === 'stderr' ? '#ffb4ab' : '#b5c0c5' }}>
+                        <span className="opacity-30 mr-2">[{i+1}]</span>{line.text}
+                      </div>
+                    ))}
+                    {output.length === 0 && <div className="text-slate-700 italic">Engine Idle...</div>}
+                    <div ref={terminalRef} />
+                 </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 bg-[#101319c0] border border-white/5 rounded-2xl p-4 glass-morphism overflow-y-auto min-h-[500px]">
+               {activeSidebarView === 'workspace' ? (
+                  <WorkspaceView onLoadProject={(pCode) => { setCode(pCode); setActiveSidebarView('editor'); triggerToast('Project loaded!'); }} triggerRefresh={workspaceRefreshKey} />
+              ) : activeSidebarView === 'files' ? (
+                  <VirtualFileExplorer files={files} onRemove={removeFile} />
+              ) : activeSidebarView === 'templates' ? (
+                  <TemplatesGallery onSelect={(templateCode) => { if (window.confirm("Replace current code?")) { setCode(templateCode); setActiveSidebarView('editor'); } }} />
+              ) : activeSidebarView === 'search' ? (
+                  <SearchView code={code} onSelectResult={() => setActiveSidebarView('editor')} />
+              ) : activeSidebarView === 'history' ? (
+                  <HistoryView onSelectCode={(hCode) => { setCode(hCode); setActiveSidebarView('editor'); }} />
+              ) : activeSidebarView === 'settings' ? (
+                  <SettingsView fontSize={fontSize} setFontSize={setFontSize} hwAccel={hwAccel} setHwAccel={setHwAccel} />
+              ) : null}
+            </div>
+          )}
+        </div>
+
+        <MobileBottomNav activeView={activeSidebarView} onViewChange={setActiveSidebarView} />
+      </div>
+
+
+      {toast && <Toast message={toast.message} onDismiss={() => setToast(null)} />}
+      
+      {/* ── SHARED MODALS ── */}
+      {expandedPlot && (
+        <div className="fixed inset-0 bg-[#0b0f19] z-[1000] flex flex-col" onClick={() => setExpandedPlot(null)}>
+           <div className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-midnight-blue/40 backdrop-blur-md">
+              <span className="text-[11px] font-black uppercase tracking-widest text-neon-cyan">Fullscreen View</span>
+              <button onClick={() => setExpandedPlot(null)} className="p-2 text-slate-400 hover:text-white transition-colors">
+                <XCircle size={22} />
+              </button>
+           </div>
+           <div className="flex-1 overflow-hidden p-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+              {expandedPlot.type === 'html' ? (
+                  <iframe srcDoc={expandedPlot.data} className="w-full h-full border-none bg-[#0b0f19]" />
+              ) : (
+                  <img src={`data:image/png;base64,${expandedPlot.data}`} className="max-w-full max-h-full object-contain" alt="Expanded Plot" />
+              )}
+           </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // ── SUB-RENDERERS (DESKTOP) ──
+  function renderHeader() {
+    return (
       <header className="header font-display">
         <div className="logo-block">
-          <Menu 
-            size={18} 
-            className="mobile-menu-icon" 
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          />
+          <Menu size={18} className="mobile-menu-icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)} />
           <Logo height={18} />
         </div>
-
         <MenuBar 
           className="hidden-mobile"
-          onSaveProject={handleSaveProject}
-          onDownloadScript={handleDownloadScript}
-          onUndo={handleUndo}
-          onRedo={handleRedo}
+          onSaveProject={handleSaveProject} onDownloadScript={handleDownloadScript}
+          onUndo={handleUndo} onRedo={handleRedo}
           onToggleTerminal={() => setIsTerminalOpen(!isTerminalOpen)}
-          isTerminalOpen={isTerminalOpen}
-          onClearLogs={clearOutput}
-          onRestartEngine={handleRestartEngine}
-          isInitializing={isInitializing}
+          isTerminalOpen={isTerminalOpen} onClearLogs={clearOutput}
+          onRestartEngine={handleRestartEngine} isInitializing={isInitializing}
         />
-
-        <div className="header-center hidden-mobile">
-          {/* Styled label wraps the invisible input — no browser default text ever shown */}
-          <label className="dropzone-pill" htmlFor="header-upload">
-            <Upload size={14} className="text-[#00d1ff]" />
-            <span style={{ color: '#c8d4d8' }}>Drop <strong style={{ color:'#ffffff' }}>.CSV</strong> or&nbsp;<strong style={{ color:'#00d1ff' }}>Browse</strong></span>
-            <input 
-              id="header-upload"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={handleFileUpload} 
-              multiple 
-              onClick={(e) => e.target.value = null}
-            />
+        <div className="header-center hidden-mobile items-center flex">
+          <label className="dropzone-pill flex items-center" htmlFor="header-upload">
+            <Upload size={14} className="text-[#00d1ff] mr-2" />
+            <span className="text-[#c8d4d8]">Drop <strong className="text-[#ffffff]">.CSV</strong> or&nbsp;<strong className="text-[#00d1ff]">Browse</strong></span>
+            <input id="header-upload" type="file" className="hidden" onChange={handleFileUpload} multiple onClick={(e) => { e.target.value = null; }} />
           </label>
         </div>
-
         <div className="header-actions">
-           {/* Desktop Visible Buttons */}
-           <button 
-             className="btn-secondary-pill mr-2 desktop-only"
-             onClick={handleSaveProject}
-             title="Save Workspace Project"
-           >
-             <Save size={16} />
-             <span>Save</span>
-           </button>
-           
-           <button 
-            className="btn-cyan-pill app-run-btn" 
-            onClick={handleRun}
-            disabled={isInitializing || isRunning}
-          >
-            {isRunning ? (
-              <RefreshCw size={17} className="animate-spin" />
-            ) : (
-              <Play size={17} fill="#003543" />
-            )}
+           <button className="btn-secondary-pill mr-2 desktop-only" onClick={handleSaveProject} title="Save Workspace Project"><Save size={16} /><span>Save</span></button>
+           <button className="btn-cyan-pill app-run-btn" onClick={handleRun} disabled={isInitializing || isRunning}>
+            {isRunning ? <RefreshCw size={17} className="animate-spin" /> : <Play size={17} fill="#003543" />}
             <span className="desktop-only">{isRunning ? 'Running...' : 'Run Code'}</span>
           </button>
         </div>
       </header>
+    );
+  }
 
-      {/* 2. MAIN LAYOUT: 3-COLUMN GRID */}
-      <main className="ide-layout">
-        
-        {/* COLUMN 1: SLIM ICON SIDEBAR (60px) */}
-        <aside className="sidebar-icons">
+  function renderSidebar() {
+    return (
+      <aside className="sidebar-icons">
           <div className="icon-group">
             <div data-tooltip="Code Editor" onClick={() => setActiveSidebarView('editor')}>
               <FileCode className={`sidebar-icon ${activeSidebarView === 'editor' ? 'active' : ''}`} />
@@ -514,312 +650,101 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
               <LayoutGrid className={`sidebar-icon ${activeSidebarView === 'templates' ? 'active' : ''}`} />
             </div>
           </div>
-
           <div className="mt-auto mb-6 flex flex-col gap-6">
             <div data-tooltip="IDE Settings" onClick={() => setActiveSidebarView('settings')}>
               <Settings className={`sidebar-icon ${activeSidebarView === 'settings' ? 'active' : ''}`} />
             </div>
           </div>
-        </aside>
+      </aside>
+    );
+  }
 
-        {/* COLUMN 2: MIDDLE DATA/CODE STAGE (DYNAMIC PERCENTAGE) */}
-        <section 
-          className="middle-column" 
-          style={{ 
-            flex: isCollapsed ? '0 0 0px' : `0 0 ${sideWidth}%`,
-            display: isCollapsed ? 'none' : 'flex' 
-          }}
-        >
-          {activeSidebarView === 'workspace' ? (
-              <WorkspaceView 
-                  onLoadProject={(pCode) => {
-                      setCode(pCode);
-                      setActiveSidebarView('editor');
-                      triggerToast('Project loaded into editor!');
-                  }} 
-                  triggerRefresh={workspaceRefreshKey} 
-              />
-          ) : activeSidebarView === 'files' ? (
-              <VirtualFileExplorer files={files} onRemove={removeFile} />
-          ) : activeSidebarView === 'templates' ? (
-              <TemplatesGallery onSelect={(templateCode) => {
-                  if (window.confirm("Replace current code with template?")) {
-                      setCode(templateCode);
-                      setActiveSidebarView('editor');
-                  }
-              }} />
-          ) : activeSidebarView === 'search' ? (
-              <SearchView 
-                code={code} 
-                onSelectResult={() => setActiveSidebarView('editor')} 
-              />
-          ) : activeSidebarView === 'history' ? (
-              <HistoryView onSelectCode={(hCode) => {
-                  setCode(hCode);
-                  setActiveSidebarView('editor');
-                  triggerToast('Past code version restored!');
-              }} />
-          ) : activeSidebarView === 'settings' ? (
-              <SettingsView 
-                fontSize={fontSize} 
-                setFontSize={setFontSize}
-                hwAccel={hwAccel}
-                setHwAccel={setHwAccel}
-              />
-          ) : (
-            <div className="editor-stage">
-              <div className="editor-tabs">
-                <div 
-                  className={`tab ${activeTab === 'script.py' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('script.py')}
-                >
-                  <FileCode size={14} className={activeTab === 'script.py' ? 'text-[#00d1ff]' : ''} />
-                  <span>script.py</span>
-                </div>
-                <div 
-                  className={`tab ${activeTab === 'data_preview.csv' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('data_preview.csv')}
-                >
-                  <Database size={14} className={activeTab === 'data_preview.csv' ? 'text-[#4edea3]' : ''} />
-                  <span>data_preview.csv</span>
-                </div>
+  function renderMiddleColumn() {
+    return (
+      <section className="middle-column" style={{ flex: isCollapsed ? '0 0 0px' : `0 0 ${sideWidth}%`, display: isCollapsed ? 'none' : 'flex' }}>
+        {activeSidebarView === 'workspace' ? (
+            <WorkspaceView onLoadProject={(pCode) => { setCode(pCode); setActiveSidebarView('editor'); triggerToast('Project loaded!'); }} triggerRefresh={workspaceRefreshKey} />
+        ) : activeSidebarView === 'files' ? (
+            <VirtualFileExplorer files={files} onRemove={removeFile} />
+        ) : activeSidebarView === 'templates' ? (
+            <TemplatesGallery onSelect={(templateCode) => { if (window.confirm("Replace current code?")) { setCode(templateCode); setActiveSidebarView('editor'); } }} />
+        ) : activeSidebarView === 'search' ? (
+            <SearchView code={code} onSelectResult={() => setActiveSidebarView('editor')} />
+        ) : activeSidebarView === 'history' ? (
+            <HistoryView onSelectCode={(hCode) => { setCode(hCode); setActiveSidebarView('editor'); }} />
+        ) : activeSidebarView === 'settings' ? (
+            <SettingsView fontSize={fontSize} setFontSize={setFontSize} hwAccel={hwAccel} setHwAccel={setHwAccel} />
+        ) : (
+          <div className="editor-stage">
+            <div className="editor-tabs">
+              <div className={`tab ${activeTab === 'script.py' ? 'active' : ''}`} onClick={() => setActiveTab('script.py')}>
+                <FileCode size={14} className={activeTab === 'script.py' ? 'text-[#00d1ff]' : ''} />
+                <span>script.py</span>
               </div>
-
-              <div className="flex-1 overflow-hidden min-h-0">
-                  {activeTab === 'script.py' ? (
-                      <Editor key={editorKey} value={code} onChange={setCode} ref={editorRef} fontSize={fontSize} />
-                  ) : (
-                      <DataPreview 
-                        file={files.find(f => f.name.endsWith('.csv'))} 
-                        insights={dataInsights}
-                      />
-                  )}
+              <div className={`tab ${activeTab === 'data_preview.csv' ? 'active' : ''}`} onClick={() => setActiveTab('data_preview.csv')}>
+                <Database size={14} className={activeTab === 'data_preview.csv' ? 'text-[#4edea3]' : ''} />
+                <span>data_preview.csv</span>
               </div>
             </div>
-          )}
-
-          {/* 3. COLLAPSIBLE BOTTOM DOCK (VS CODE STYLE) */}
-          <div 
-            className={`bottom-dock ${isTerminalOpen ? 'open' : 'closed'} ${isResizing ? 'no-transition' : ''}`}
-            style={{ height: isTerminalOpen ? `${terminalHeight}px` : '0px', flex: 'none' }}
-          >
-            <div className="terminal-resizer" onMouseDown={handleMouseDown} />
-            
-              <div className="terminal-header">
-              <div className="flex items-center" onClick={() => setIsTerminalOpen(!isTerminalOpen)}>
-                <TerminalIcon size={12} className="mr-3" style={{ color: '#4e6570' }} />
-                <span style={{ color: '#5a7080', fontSize: '10px', fontWeight: 800, letterSpacing: '0.12em' }}>VIRTUAL TERMINAL / CONSOLE</span>
-                {isRunning && (
-                <div className="ml-4 flex gap-1.5 align-center">
-                    <div className="w-1 h-1 rounded-full bg-[#00d1ff] animate-pulse" />
-                    <div className="w-1 h-1 rounded-full bg-[#00d1ff] animate-pulse delay-75" />
-                    <div className="w-1 h-1 rounded-full bg-[#00d1ff] animate-pulse delay-150" />
-                </div>
-              )}
-              </div>
-              <button style={{ fontSize: '10px', color: '#4e6570', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setIsTerminalOpen(false)}>
-                Hide
-              </button>
-            </div>
-            <div className="terminal-scroll custom-scroll" ref={terminalRef}>
-                <div style={{ color: '#3d5260', fontSize: '11px', fontWeight: 700, marginBottom: '8px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                {status ? `System Log: ${status}` : 'Pyodide Instance Initializing...'}
-                </div>
-                {output.length === 0 ? (
-                <div style={{ color: '#2e4050', fontStyle: 'italic' }}>SYSTEM:// IDLE. Waiting for execution...</div>
+            <div className="flex-1 overflow-hidden min-h-0">
+                {activeTab === 'script.py' ? (
+                    <Editor key={editorKey} value={code} onChange={setCode} ref={editorRef} fontSize={fontSize} />
                 ) : (
-                output.map((log, i) => (
-                    <div key={i} className={`log-entry`} style={{ color: log.type === 'stderr' ? '#ffb4ab' : '#b5c0c5' }}>
-                    {log.text}
-                    </div>
-                ))
-                )}
-                {!isRunning && output.length > 0 && (
-                <div className="log-entry mt-3 font-bold flex items-center gap-2" style={{ color: '#00ffa3', textShadow: '0 0 8px rgba(0, 255, 163, 0.4)' }}>
-                    <CheckCircle2 size={12} />
-                    <span>WASM_EXECUTION_STATE: COMPLETED</span>
-                </div>
+                    <DataPreview file={files.find(f => f.name.endsWith('.csv'))} insights={dataInsights} />
                 )}
             </div>
           </div>
-          
-        </section>
-
-        {/* VERTICAL SPLITTER: Resizable Panel Handle */}
-        <div 
-          className={`vertical-resizer ${isResizingVertical ? 'is-dragging' : ''} ${isCollapsed ? 'is-collapsed' : ''}`} 
-          onMouseDown={handleVerticalMouseDown} 
-        >
-          <button 
-            className="collapse-toggle" 
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsCollapsed(!isCollapsed);
-            }}
-            title={isCollapsed ? "Expand Editor" : "Collapse Editor (Presentation Mode)"}
-          >
-            {isCollapsed ? "»" : "«"}
-          </button>
+        )}
+        <div className={`bottom-dock ${isTerminalOpen ? 'open' : 'closed'} ${isResizing ? 'no-transition' : ''}`} style={{ height: isTerminalOpen ? `${terminalHeight}px` : '0px', flex: 'none' }}>
+          <div className="terminal-resizer" onMouseDown={handleMouseDown} />
+          <div className="terminal-header" onClick={() => setIsTerminalOpen(!isTerminalOpen)}>
+            <div className="flex items-center"><TerminalIcon size={12} className="mr-3 text-[#4e6570]" /><span>VIRTUAL CONSOLE</span></div>
+            <button className="text-[10px] text-[#4e6570] font-bold" onClick={() => setIsTerminalOpen(false)}>Hide</button>
+          </div>
+          <div className="terminal-scroll custom-scroll" ref={terminalRef}>
+              <div className="mb-2 text-[10px] uppercase text-[#3d5260] font-bold">{status ? `System: ${status}` : 'Initializing Pyodide...'}</div>
+              {output.map((log, i) => <div key={i} className="log-entry" style={{ color: log.type === 'stderr' ? '#ffb4ab' : '#b5c0c5' }}>{log.text}</div>)}
+              {!isRunning && output.length > 0 && <div className="mt-3 text-[#00ffa3] font-bold flex gap-2"><CheckCircle2 size={12} /><span>EXECUTION_COMPLETED</span></div>}
+          </div>
         </div>
+      </section>
+    );
+  }
 
-        {/* COLUMN 3: RIGHT VISUAL PANEL (FLEX GROWTH) */}
-        <section 
-          className="visuals-column" 
-          style={{ 
-            pointerEvents: (isResizing || isResizingVertical) ? 'none' : 'auto' 
-          }}
-        >
+  function renderVisualsColumn() {
+    return (
+      <>
+        <div className={`vertical-resizer ${isResizingVertical ? 'is-dragging' : ''} ${isCollapsed ? 'is-collapsed' : ''}`} onMouseDown={handleVerticalMouseDown}>
+          <button className="collapse-toggle" onClick={(e) => { e.stopPropagation(); setIsCollapsed(!isCollapsed); }}>{isCollapsed ? "»" : "«"}</button>
+        </div>
+        <section className="visuals-column" style={{ pointerEvents: (isResizing || isResizingVertical) ? 'none' : 'auto' }}>
           <div className="visuals-header">
-            <div className="flex items-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#00d1ff] shadow-[0_0_8px_rgba(0,209,255,0.8)]" />
-              <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A4E6FF]">WASM Execution Result</span>
-            </div>
-            <div className="flex gap-2">
-                <button 
-                    className="p-2 rounded bg-slate-900/50 hover:bg-slate-800 text-slate-500 hover:text-slate-300 disabled:opacity-30"
-                    disabled={plots.length === 0}
-                    onClick={() => setExpandedPlot(plots[0])}
-                >
-                    <Maximize2 size={14} />
-                </button>
-            </div>
+            <div className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#00d1ff] shadow-[0_0_8px_rgba(0,209,255,0.8)]" /><span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A4E6FF]">Output Area</span></div>
+            <button className="p-2 rounded bg-slate-900/50 text-slate-500 hover:text-slate-300" onClick={() => setExpandedPlot(plots[0])} disabled={plots.length === 0}><Maximize2 size={14} /></button>
           </div>
-
           <div className="visuals-canvas-area custom-scroll">
             {plots.length === 0 ? (
-              <div className="visual-canvas-placeholder">
-                <div className="relative">
-                    <div className="absolute inset-0 bg-[#00d1ff10] blur-3xl rounded-full scale-150" />
-                    <div className="relative w-28 h-28 rounded-[2rem] border border-[#85939915] flex items-center justify-center bg-[#101319c0] shadow-2xl">
-                        <BarChart3 size={48} className="text-slate-800" />
-                    </div>
-                </div>
-                <div className="space-y-4">
-                    <h1 className="font-black tracking-[0.1em] text-sm uppercase" style={{ color: '#00d1ff' }}>Visual Canvas</h1>
-                    <p className="text-sm font-medium tracking-tight leading-relaxed px-6" style={{ color: '#e1e2eb' }}>Generate high-fidelity visualizations instantly. The engine supports rendering directly within this canvas.</p>
-                </div>
+              <div className="visual-canvas-placeholder flex flex-col items-center justify-center h-full opacity-20">
+                <BarChart3 size={48} className="mb-4" />
+                <span className="text-xs font-black tracking-widest uppercase text-neon-cyan text-center">Visual Canvas Ready</span>
               </div>
             ) : (
-              <div className="flex flex-col gap-12 w-full">
+              <div className="flex flex-col gap-12 w-full p-4">
                 {plots.map((plot, i) => (
-                  <div key={i} className="relative group w-full px-4 pt-8">
-                    <div className="flex items-center justify-end mb-2 px-2">
-                        <button 
-                            onClick={() => downloadPlot(plot, i)}
-                            className="btn-secondary-pill py-1 opacity-80 hover:opacity-100"
-                        >
-                            <Download size={13} />
-                            <span>Download</span>
-                        </button>
-                    </div>
-                    <div 
-                      style={{ 
-                        background: '#0E1117', 
-                        borderRadius: '12px', 
-                        overflow: 'hidden', 
-                        border: '1px solid rgba(133,147,153,0.08)',
-                        boxShadow: '0 32px 64px -16px rgba(0,0,0,0.8)',
-                        padding: 0,
-                        lineHeight: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'stretch',
-                        width: '100%',
-                        maxWidth: 'none',
-                        minHeight: plot.type === 'html' ? '500px' : 'auto'
-                      }}
-                      className="group-hover:border-[#00d1ff20] transition-all"
-                    >
-                        {plot.type === 'html' ? (
-                          <iframe 
-                            ref={el => iframeRefs.current[i] = el}
-                            srcDoc={plot.data}
-                            scrolling="auto"
-                            title={`Interactive Plot ${i+1}`}
-                            style={{ 
-                              width: '100% !important', 
-                              height: '100% !important', 
-                              minHeight: '400px',
-                              border: 'none',
-                              display: 'block',
-                              background: 'transparent'
-                            }}
-                          />
-                        ) : (
-                          <img 
-                              src={`data:image/png;base64,${plot.data}`} 
-                              alt={`Visualization output ${i+1}`} 
-                              style={{ 
-                                display: 'block', 
-                                width: '100%', 
-                                height: 'auto',
-                                padding: 0,
-                                margin: 0,
-                                background: 'transparent',
-                                border: 'none',
-                              }}
-                          />
-                        )}
+                  <div key={i} className="relative group w-full">
+                    <div className="flex justify-end mb-2"><button onClick={() => downloadPlot(plot, i)} className="btn-secondary-pill py-1"><Download size={13} /><span>Save</span></button></div>
+                    <div className="bg-[#0E1117] rounded-xl border border-white/5 overflow-hidden shadow-2xl">
+                        {plot.type === 'html' ? <iframe ref={el => iframeRefs.current[i] = el} srcDoc={plot.data} className="w-full min-h-[400px] border-none" /> : <img src={`data:image/png;base64,${plot.data}`} className="w-full h-auto" />}
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-
         </section>
-      </main>
-
-      {toast && (
-        <Toast 
-          message={toast.message} 
-          onDismiss={() => setToast(null)} 
-        />
-      )}
-
-      {expandedPlot && (
-        <div className="modal-overlay" onClick={() => setExpandedPlot(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setExpandedPlot(null)}>
-                <XCircle size={24} strokeWidth={1} />
-            </button>
-            <div 
-                className="canvas-mat" 
-                style={{ 
-                    height: expandedPlot.type === 'html' ? '100%' : 'auto',
-                    width: '100%',
-                    padding: 0,
-                    display: 'flex',
-                    alignItems: 'stretch'
-                }}
-            >
-              {expandedPlot.type === 'html' ? (
-                <iframe 
-                    srcDoc={expandedPlot.data}
-                    scrolling="no"
-                    title="Fullscreen Interactive View"
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      border: 'none',
-                      overflow: 'hidden',
-                      background: 'transparent',
-                      display: 'block'
-                    }}
-                />
-              ) : (
-                <img 
-                    src={`data:image/png;base64,${expandedPlot.data}`} 
-                    alt="Fullscreen Chart View" 
-                    className="modal-image"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+      </>
+    );
+  }
 }
 
 export default App;

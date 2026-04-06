@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@400..900&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* THE KINETIC SHADOW SYSTEM (v2 - Fixed Architecture) */
   --bg-dark: #0e1117;          
@@ -2728,6 +2732,14 @@ html, body, #root {
 /* =======================================================
    UNIFIED MOBILE RESPONSIVE SYSTEM (Hard Override)
    ======================================================= */
+/* GLASS MORPHISM UTILITY */
+.glass-morphism {
+  background: rgba(16, 19, 25, 0.6) !important;
+  backdrop-filter: blur(12px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
 @media (max-width: 1024px) {
   /* UTILS */
   .hidden-mobile { display: none !important; }
