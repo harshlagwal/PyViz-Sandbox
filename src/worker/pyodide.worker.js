@@ -31,6 +31,8 @@ const setupPyodide = async () => {
 
         // Configure Matplotlib Agg backend (clean white output)
         await pyodide.runPythonAsync(`
+import os
+os.environ['MPLBACKEND'] = 'AGG'
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -38,10 +40,17 @@ import io
 import base64
 import sys
 
+# Crucial: Monkey-patch plt.show() so it doesn't clear figures before we extract them via get_outputs()
+_original_show = plt.show
+def _patched_show(*args, **kwargs):
+    pass
+plt.show = _patched_show
+
 # Clean default theme - crisp white output
 plt.rcParams.update({
     'figure.facecolor': '#0E1117',
     'axes.facecolor': '#ffffff',
+
     'savefig.facecolor': '#0E1117',
     'savefig.edgecolor': 'none',
     'figure.dpi': 120,
