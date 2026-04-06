@@ -355,7 +355,7 @@ const LandingPage = ({ onLaunch }) => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1100px] mx-auto w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1100px] mx-auto w-full">
           {[
             { 
               icon: <Upload size={32} />, 
@@ -385,7 +385,7 @@ const LandingPage = ({ onLaunch }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, ease: "easeOut", delay: feature.delay }}
-              className="feature-card flex flex-col items-center text-center p-8 md:p-10 w-full"
+              className="feature-card flex flex-col items-center text-center p-8 md:p-10 w-full md:w-auto"
             >
               <div className={`feature-icon-box ${feature.color}`}>
                 {feature.icon}
@@ -400,12 +400,12 @@ const LandingPage = ({ onLaunch }) => {
 
       {/* 4. DEMO / SPLIT-PANE PREVIEW */}
       <section id="demo" className="demo-section px-4 md:px-12 max-w-7xl mx-auto py-12 md:py-24 w-full">
-        <div className="demo-container">
+        <div className="demo-container flex flex-col lg:flex-row items-center gap-12 w-full">
           <motion.div 
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="demo-text"
+            className="demo-text w-full lg:w-1/2"
           >
             <h2 className="section-title text-left">Write Python. <br/>Visualize Instantly.</h2>
             <p className="section-desc text-left mb-8">
@@ -429,7 +429,7 @@ const LandingPage = ({ onLaunch }) => {
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="demo-window"
+            className="demo-window w-full lg:w-1/2"
           >
              <div className="window-pane code-pane">
                 <div className="mockup-content overflow-x-auto w-full">
@@ -493,7 +493,7 @@ const LandingPage = ({ onLaunch }) => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px] mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-[1000px] mx-auto w-full">
           {/* TRADITIONAL CLOUD (Left / Inferior) */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
