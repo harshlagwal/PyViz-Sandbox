@@ -100,11 +100,10 @@ function App() {
         // DEFAULT STRIKING VISUAL (Interactive Plotly)
         setCode(`import plotly.graph_objects as go
 import numpy as np
-import plotly.io as pio
 
 # 1. Generate Data
-t = np.linspace(0, 10, 100)
-y = np.sin(t) * np.exp(-t/5)
+t = np.linspace(0, 10, 200)
+y = np.cos(t) * np.exp(-t/5)
 
 # 2. Build Interactive Plotly Figure
 fig = go.Figure()
@@ -112,27 +111,24 @@ fig.add_trace(go.Scatter(
     x=t, y=y,
     mode='lines+markers',
     line=dict(color='#00d1ff', width=4),
-    marker=dict(size=8, color='#00ffa3'),
+    marker=dict(size=8, color='#ffffff', line=dict(color='#00d1ff', width=2)),
     name='Signal Alpha'
-));
-
+))
 
 # 3. Apply Kinetic Shadow Theme
 fig.update_layout(
+    title='Interactive Signal Analysis: WASM Optimized',
     template='plotly_dark',
     paper_bgcolor='#0E1117',
     plot_bgcolor='#0E1117',
     font=dict(family="Inter", size=12),
     margin=dict(l=20, r=20, t=60, b=20),
-    title="Interactive Signal Analysis: WASM Optimized",
-    # If it's a figure object, strip fixed dimensions and re-render with responsive config
-    if hasattr(globals()['OUTPUT_HTML'], 'to_html'):
-        # Force dynamic sizing: Strip height/width to allow container to lead
-        globals()['OUTPUT_HTML'].update_layout(height=None, width=None, autosize=True)
-        globals()['OUTPUT_HTML'] = pio.to_html(globals()['OUTPUT_HTML'], include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'displaylogo': False})
+    xaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'),
+    yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)')
+)
 
-# 4. EXPORT TO CANVAS (CRITICAL: Set OUTPUT_HTML)
-OUTPUT_HTML = pio.to_html(fig, include_plotlyjs='cdn', full_html=False, config={'responsive': True, 'displaylogo': False})
+# 4. EXPORT TO CANVAS (Auto-renders via fig.show() patch)
+fig.show()
 
 print(">>> PyViz WASM Engine: INTERACTIVE_MODE_ACTIVE")
 print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
