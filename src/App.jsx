@@ -734,7 +734,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
         </div>
         <section className="visuals-column" style={{ pointerEvents: (isResizing || isResizingVertical) ? 'none' : 'auto' }}>
           <div className="visuals-header">
-            <div className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#00d1ff] shadow-[0_0_8px_rgba(0,209,255,0.8)]" /><span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A4E6FF]">Output Area</span></div>
+            <div className="flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-[#00d1ff] shadow-[0_0_8px_rgba(0,209,255,0.8)]" /><span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A4E6FF]">WASM EXECUTION RESULT</span></div>
             <button className="p-2 rounded bg-slate-900/50 text-slate-500 hover:text-slate-300" onClick={() => setExpandedPlot(plots[0])} disabled={plots.length === 0}><Maximize2 size={14} /></button>
           </div>
           <div className="visuals-canvas-area custom-scroll">
