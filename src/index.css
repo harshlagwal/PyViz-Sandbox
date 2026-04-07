@@ -2549,6 +2549,48 @@ html, body, #root {
   opacity: 1;
 }
 
+@media (max-width: 640px) {
+  .templates-gallery {
+    padding: 20px !important;
+  }
+  
+  .template-card-hq {
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 20px !important;
+  }
+
+  .card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+
+  .load-blueprint-btn {
+    opacity: 1 !important;
+    font-size: 10px !important;
+  }
+
+  .tech-badge {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+
+  .template-title {
+    font-size: 16px !important;
+  }
+
+  .template-desc {
+    font-size: 12px !important;
+    max-width: 100% !important;
+  }
+
+  .template-icon-wrapper {
+    padding: 12px !important;
+    width: fit-content;
+  }
+}
+
 .pro-footer-card {
   margin-top: 48px;
   padding: 28px;
