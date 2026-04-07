@@ -1,10 +1,10 @@
 import React from 'react';
-import { Code2, Folder, Search, Layout, Bug, Layers } from 'lucide-react';
+import { Code2, Database, Search, Layout, Bug, Layers } from 'lucide-react';
 
 const MobileBottomNav = ({ activeView, onViewChange }) => {
   const tabs = [
     { id: 'editor', icon: Code2, label: 'Editor' },
-    { id: 'files', icon: Folder, label: 'Files' },
+    { id: 'files', icon: Database, label: 'Files' },
     { id: 'search', icon: Search, label: 'Search' },
     { id: 'templates', icon: Layout, label: 'Templates' },
     { id: 'history', icon: Bug, label: 'History' },

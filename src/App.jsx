@@ -551,7 +551,7 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
                  <div className="p-4 max-h-[200px] overflow-y-auto custom-scroll font-mono text-[11px]">
                     {output.map((line, i) => (
                       <div key={i} className="mb-1 leading-relaxed" style={{ color: line.type === 'stderr' ? '#ffb4ab' : '#b5c0c5' }}>
-                        <span className="opacity-30 mr-2">[{i+1}]</span>{line.text}
+                        {line.text}
                       </div>
                     ))}
                     {output.length === 0 && <div className="text-slate-700 italic">Engine Idle...</div>}
