@@ -749,7 +749,24 @@ print(">>> Plotly Renderer enabled via <iframe> Matting.")`);
                   <div key={i} className="relative group w-full">
                     <div className="flex justify-end mb-2"><button onClick={() => downloadPlot(plot, i)} className="btn-secondary-pill py-1"><Download size={13} /><span>Save</span></button></div>
                     <div className="bg-[#0E1117] rounded-xl border border-white/5 overflow-hidden shadow-2xl">
-                        {plot.type === 'html' ? <iframe ref={el => iframeRefs.current[i] = el} srcDoc={plot.data} className="w-full min-h-[400px] border-none plotly-view-only" /> : <img src={`data:image/png;base64,${plot.data}`} className="w-full h-auto" />}
+                        {plot.type === 'html' ? (
+                          <iframe 
+                            ref={el => iframeRefs.current[i] = el} 
+                            srcDoc={`
+                              <style>
+                                body { margin: 0; background: #0E1117; color: white; overflow-x: hidden; }
+                                ::-webkit-scrollbar { width: 5px; height: 5px; }
+                                ::-webkit-scrollbar-track { background: #0E1117; }
+                                ::-webkit-scrollbar-thumb { background: rgba(0, 209, 255, 0.2); border-radius: 20px; }
+                                ::-webkit-scrollbar-thumb:hover { background: rgba(0, 209, 255, 0.5); }
+                              </style>
+                              ${plot.data}
+                            `} 
+                            className="w-full min-h-[400px] border-none plotly-view-only custom-scroll" 
+                          />
+                        ) : (
+                          <img src={`data:image/png;base64,${plot.data}`} className="w-full h-auto" />
+                        )}
                     </div>
                   </div>
                 ))}
