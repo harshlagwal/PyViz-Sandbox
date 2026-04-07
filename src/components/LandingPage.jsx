@@ -282,24 +282,24 @@ const LandingPage = ({ onLaunch }) => {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-[#0b0f19]/95 backdrop-blur-xl border-b border-white/10 overflow-hidden"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="md:hidden absolute top-full left-0 w-full bg-[#0b0f19] border-b border-white/10 z-[200] shadow-2xl"
             >
-              <div className="p-6 flex flex-col gap-6">
+              <div className="p-8 flex flex-col items-center gap-8">
                 {navItems.map((item) => (
                   <button 
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className="text-left text-lg font-medium text-white/70 hover:text-cyan-400 transition-colors"
+                    className="text-xl font-bold text-white/80 hover:text-cyan-400 transition-colors tracking-tight"
                   >
                     {item.label}
                   </button>
                 ))}
                 <button 
                   onClick={onLaunch}
-                  className="w-full py-4 bg-cyan-500 text-black font-bold rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+                  className="w-full max-w-[280px] py-4 bg-cyan-500 text-black font-black uppercase tracking-widest text-sm rounded-xl shadow-[0_0_30px_rgba(6,182,212,0.4)] active:scale-95 transition-all"
                 >
                   Launch IDE
                 </button>
